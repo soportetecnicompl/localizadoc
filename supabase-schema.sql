@@ -112,3 +112,32 @@ create policy "Solo admins pueden eliminar honesty"
 -- IMPORTANTE: En el dashboard de Supabase ve a:
 -- Authentication > Providers > Habilita "Anonymous sign-ins"
 -- ============================================================
+
+-- ============================================================
+-- MIGRACION 2026-05-26: owner_uid / finder_uid para RLS seguro
+-- ============================================================
+alter table documents add column if not exists owner_uid uuid;
+alter table documents add column if not exists finder_uid uuid;
+
+drop policy if exists "Usuarios autenticados pueden actualizar documentos" on documents;
+drop policy if exists "Usuarios autenticados pueden eliminar documentos" on documents;
+
+create policy "Owner or finder can update"
+  on documents for update
+  using (
+    auth.uid() = owner_uid OR
+    auth.uid() = finder_uid OR
+    auth.jwt() ->> 'email' is not null
+  );
+
+create policy "Owner can delete"
+  on documents for delete
+  using (
+    auth.uid() = owner_uid OR
+    auth.jwt() ->> 'email' is not null
+  );
+
+-- ============================================================
+-- MIGRACION 2026-05-26: reward_amount para monto de recompensa
+-- ============================================================
+alter table documents add column if not exists reward_amount text;
