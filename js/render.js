@@ -43,8 +43,9 @@ export const renderPublicLists = (docs, filter = '') => {
     const renderList = (listId, items, isLostList) => {
         const listEl = document.getElementById(listId);
         if (!listEl) return;
+        const lowerFilter = filter.toLowerCase();
         const filtered = items.filter(r => !filter || [r.doc_type, r.country, COUNTRIES[r.country]?.name, r.owner_name]
-            .some(v => v?.toLowerCase().includes(filter)) ||
+            .some(v => v?.toLowerCase().includes(lowerFilter)) ||
             r.doc_number?.replace(/[-\s]/g,'').includes(cleanedFilter));
 
         if (filtered.length === 0) {
@@ -97,7 +98,7 @@ export const renderHonestyWall = (entries) => {
         const countryName = getCountryNameFromPhone(entry.finder_contact);
         const el = document.createElement('div');
         el.className = 'glass-container p-4 border-l-4 border-cyan-400';
-        el.innerHTML = `<p class="italic text-gray-200">"${entry.owner_message}"</p><p class="text-right text-sm font-bold mt-2 text-cyan-300">— Agradecimiento a ${entry.finder_name}${countryName ? ` (${countryName})` : ''}</p>`;
+        el.innerHTML = `<p class="italic text-gray-200">"${entry.owner_message || ''}"</p><p class="text-right text-sm font-bold mt-2 text-cyan-300">— Agradecimiento a ${entry.finder_name}${countryName ? ` (${countryName})` : ''}</p>`;
         list.appendChild(el);
     });
 };
