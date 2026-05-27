@@ -1,7 +1,7 @@
 import { supabase } from './supabase-config.js';
 import { state } from './state.js';
 import { COUNTRIES } from './constants.js';
-import { populateCountries, populateDocTypes } from './utils.js';
+import { populateCountries, populateDocTypes, closeModal } from './utils.js';
 import { fetchMyDocuments, fetchThankedReports } from './api.js';
 import { renderMyReportsList } from './render.js';
 
@@ -22,7 +22,7 @@ export const handleLogin = (countryCode, phoneNumber, isAutoLogin = false) => {
     }
     document.getElementById('user-info')?.classList.remove('hidden');
     document.getElementById('logged-in-content')?.classList.remove('hidden');
-    import('./utils.js').then(({ closeModal }) => closeModal('loginModal'));
+    closeModal('loginModal');
 
     loadUserData();
     startUserListeners();
