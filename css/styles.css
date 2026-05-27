@@ -1,0 +1,17 @@
+body { font-family: 'Inter', sans-serif; background-color: #101010; color: #f0f0f0; overflow-x: hidden; }
+:root { --brand-glow-green: #39FF14; --brand-dark-bg: #101010; --text-primary: #ffffff; --text-secondary: #a0a0a0; --container-bg: rgba(255, 255, 255, 0.05); --border-color: rgba(255, 255, 255, 0.1); --brand-lime-green: #85A60D; }
+.aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+.aurora-background::before, .aurora-background::after { content: ''; position: absolute; width: 600px; height: 600px; border-radius: 50%; opacity: 0.15; filter: blur(100px); animation: moveAurora 20s infinite alternate; }
+.aurora-background::before { background: radial-gradient(circle, var(--brand-glow-green), transparent 60%); top: -20%; left: -20%; }
+.aurora-background::after { background: radial-gradient(circle, #72C1F2, transparent 60%); bottom: -20%; right: -20%; animation-duration: 25s; animation-delay: -5s; }
+@keyframes moveAurora { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(100px, 50px) scale(1.2); } 100% { transform: translate(-50px, -100px) scale(0.9); } }
+.glass-container { background-color: rgba(20, 20, 20, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 1rem; }
+.modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(16, 16, 16, 0.6); display: none; justify-content: center; align-items: center; z-index: 50; }
+.modal-content { max-height: 90vh; overflow-y: auto; }
+.btn-primary { background-color: var(--brand-glow-green); color: #000; font-weight: bold; transition: all 0.2s; border: 1px solid var(--brand-glow-green); }
+.btn-primary:hover { background-color: transparent; color: var(--brand-glow-green); box-shadow: 0 0 15px var(--brand-glow-green); }
+.btn-primary:disabled { background-color: #4a4a4a; color: #888; border-color: #4a4a4a; cursor: not-allowed; box-shadow: none; opacity: 0.5; }
+.btn-secondary { background-color: transparent; color: var(--text-secondary); border: 1px solid var(--border-color); }
+.btn-secondary:hover { background-color: var(--container-bg); color: var(--text-primary); }
+input, select, textarea { background-color: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 0.5rem; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--brand-glow-green); box-shadow: 0 0 10px var(--brand-glow-green); }

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - LocalizaDoc</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.875rem; }
+        th { font-weight: bold; color: #a0a0a0; text-transform: uppercase; }
+        tbody tr:hover { background-color: rgba(255, 255, 255, 0.05); }
+        .filter-btn { padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; transition: all 0.2s; }
+        .filter-btn.active { background-color: var(--brand-glow-green); color: #000; }
+        .filter-btn:not(.active) { background-color: rgba(255, 255, 255, 0.05); }
+    </style>
+</head>
+<body>
+    <div class="aurora-background"></div>
+
+    <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="glass-container p-8 w-full max-w-sm">
+            <h2 class="text-3xl font-bold mb-4 text-center">Acceso de Administrador</h2>
+            <p class="text-sm text-gray-400 mb-6 text-center">Ingresa la contraseña para continuar.</p>
+            <form id="adminLoginForm">
+                <input type="email" id="adminEmail" required class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm mb-3" placeholder="Correo electrónico">
+                <input type="password" id="adminPassword" required class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm" placeholder="Contraseña">
+                <p id="login-error" class="text-red-400 text-sm mt-2 hidden">Credenciales incorrectas.</p>
+                <button type="submit" class="btn-primary font-bold py-2 px-4 rounded-lg w-full mt-6">Ingresar</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-panel" class="container mx-auto p-4 md:p-8 max-w-7xl hidden">
+        <header class="text-center mb-10"><h1 class="text-4xl md:text-5xl font-bold">Panel de Administración</h1><p class="text-gray-400 mt-2 text-lg">Gestión de LocalizaDoc</p></header>
+
+        <section id="metrics-section" class="mb-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+            <div class="glass-container p-4 text-center rounded-lg"><p id="metric-total" class="text-3xl font-bold">0</p><p class="text-sm text-gray-400">Total Reportes</p></div>
+            <div class="glass-container p-4 text-center rounded-lg"><p id="metric-lost" class="text-3xl font-bold text-red-400">0</p><p class="text-sm text-gray-400">Perdidos</p></div>
+            <div class="glass-container p-4 text-center rounded-lg"><p id="metric-found" class="text-3xl font-bold text-yellow-400">0</p><p class="text-sm text-gray-400">Encontrados</p></div>
+            <div class="glass-container p-4 text-center rounded-lg"><p id="metric-recovered" class="text-3xl font-bold text-green-400">0</p><p class="text-sm text-gray-400">Recuperados</p></div>
+            <div class="glass-container p-4 text-center rounded-lg col-span-2 lg:col-span-1"><p id="metric-honesty-pending" class="text-3xl font-bold text-cyan-400">0</p><p class="text-sm text-gray-400">Muro Pendientes</p></div>
+        </section>
+
+        <section class="glass-container p-6 mb-12">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Empresas Colaboradoras</h2>
+                <button onclick="window.openModal('addSponsorModal')" class="btn-primary font-bold py-2 px-4 rounded-lg">Agregar Empresa</button>
+            </div>
+            <div id="sponsors-list" class="space-y-3 max-h-96 overflow-y-auto"></div>
+        </section>
+
+        <section id="honesty-wall-admin" class="glass-container p-6 mb-12">
+            <h2 class="text-2xl font-bold mb-4">Moderar Muro de la Honestidad</h2>
+            <div id="honesty-submissions-list" class="space-y-4 max-h-96 overflow-y-auto"></div>
+        </section>
+
+        <section class="glass-container p-6 mb-12">
+            <h2 class="text-2xl font-bold mb-4">Gestión de Reportes</h2>
+            <div class="flex flex-wrap gap-4 mb-4">
+                <input type="text" id="reportSearch" class="flex-grow px-4 py-2 rounded-lg" placeholder="Buscar reportes...">
+                <div id="date-filters" class="flex items-center gap-2">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="today">Hoy</button>
+                    <button class="filter-btn" data-filter="week">Esta Semana</button>
+                    <button class="filter-btn" data-filter="month">Este Mes</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table>
+                    <thead><tr><th>Estado</th><th>Tipo Doc.</th><th>Número Doc.</th><th>Fecha</th><th>Dueño</th><th>Tel. Dueño</th><th>Acciones</th></tr></thead>
+                    <tbody id="reports-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <div id="addSponsorModal" class="modal-backdrop"><div class="glass-container p-8 w-11/12 md:w-1/2 lg:w-1/3 modal-content"><h2 class="text-2xl font-bold mb-6">Agregar Nueva Empresa</h2><form id="addSponsorForm" class="space-y-4"><input type="text" id="sponsorName" required class="block w-full px-3 py-2" placeholder="Nombre de la Empresa"><input type="url" id="sponsorLogoUrl" required class="block w-full px-3 py-2" placeholder="URL del Logo"><input type="tel" id="sponsorPhone" class="block w-full px-3 py-2" placeholder="Teléfono (Opcional)"><input type="email" id="sponsorEmail" class="block w-full px-3 py-2" placeholder="Correo (Opcional)"><textarea id="sponsorAddress" class="block w-full px-3 py-2" placeholder="Dirección (Opcional)" rows="2"></textarea><div class="flex justify-end space-x-4 mt-6"><button type="button" onclick="window.closeModal('addSponsorModal')" class="btn-secondary font-bold py-2 px-4 rounded-lg">Cancelar</button><button type="submit" class="btn-primary font-bold py-2 px-4 rounded-lg">Agregar Empresa</button></div></form></div></div>
+    <div id="editSponsorModal" class="modal-backdrop"><div class="glass-container p-8 w-11/12 md:w-1/2 lg:w-1/3 modal-content"><h2 class="text-2xl font-bold mb-6">Editar Empresa</h2><form id="editSponsorForm" class="space-y-4"><input type="hidden" id="editSponsorId"><input type="text" id="editSponsorName" required class="block w-full px-3 py-2" placeholder="Nombre"><input type="url" id="editSponsorLogoUrl" required class="block w-full px-3 py-2" placeholder="URL del Logo"><input type="tel" id="editSponsorPhone" class="block w-full px-3 py-2" placeholder="Teléfono"><input type="email" id="editSponsorEmail" class="block w-full px-3 py-2" placeholder="Correo"><textarea id="editSponsorAddress" class="block w-full px-3 py-2" placeholder="Dirección" rows="2"></textarea><div class="flex justify-end space-x-4 mt-6"><button type="button" onclick="window.closeModal('editSponsorModal')" class="btn-secondary font-bold py-2 px-4 rounded-lg">Cancelar</button><button type="submit" class="btn-primary font-bold py-2 px-4 rounded-lg">Guardar Cambios</button></div></form></div></div>
+    <div id="editReportModal" class="modal-backdrop"><div class="glass-container p-8 w-11/12 md:w-1/2 lg:w-1/3 modal-content"><h2 class="text-2xl font-bold mb-6">Editar Reporte</h2><form id="editReportForm" class="space-y-4"><input type="hidden" id="editReportId"><div><label class="text-sm">Estado</label><select id="editReportStatus" class="block w-full px-3 py-2 mt-1"><option value="lost">lost</option><option value="found">found</option><option value="match">match</option><option value="recovered">recovered</option></select></div><input type="text" id="editReportDocType" required class="block w-full px-3 py-2" placeholder="Tipo de Documento"><input type="text" id="editReportDocNumber" required class="block w-full px-3 py-2" placeholder="Número"><input type="text" id="editReportOwnerName" class="block w-full px-3 py-2" placeholder="Nombre Dueño"><input type="text" id="editReportOwnerId" class="block w-full px-3 py-2" placeholder="Tel. Dueño (OwnerID)"><div class="flex justify-end space-x-4 mt-6"><button type="button" onclick="window.closeModal('editReportModal')" class="btn-secondary font-bold py-2 px-4 rounded-lg">Cancelar</button><button type="submit" class="btn-primary font-bold py-2 px-4 rounded-lg">Guardar Cambios</button></div></form></div></div>
+
+    <script type="module" src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email != null;
+    }
+
+    match /artifacts/encuentramiid/public/data/documents/{docId} {
+      allow read: if true;
+      allow create: if isAuth()
+        && request.resource.data.keys().hasAll(['country', 'docType', 'docNumber', 'status', 'ownerId', 'createdAt'])
+        && request.resource.data.status in ['lost', 'found']
+        && request.resource.data.docNumber is string
+        && request.resource.data.docNumber.size() > 0
+        && request.resource.data.docNumber.size() < 50;
+      allow update: if isAuth();
+      allow delete: if isAuth();
+    }
+
+    match /artifacts/encuentramiid/public/data/sponsors/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /artifacts/encuentramiid/public/data/honestySubmissions/{docId} {
+      allow read: if true;
+      allow create: if isAuth()
+        && request.resource.data.keys().hasAll(['reportId', 'ownerId', 'ownerMessage', 'status', 'createdAt'])
+        && request.resource.data.status == 'pending'
+        && request.resource.data.ownerMessage.size() > 0
+        && request.resource.data.ownerMessage.size() < 1000;
+      allow update, delete: if isAdmin();
+    }
+  }
+}
