@@ -15,5 +15,5 @@ const DOC_ICONS = {
     'Licencia de Conducir': '🚗',
 };
 
-export const getDocIcon = (docType) => DOC_ICONS[docType] || '📄';
+export const getDocIcon = (docType) => DOC_ICONS[docType] ?? '📄';
 export const DAYS_UNTIL_STALE = 180;
