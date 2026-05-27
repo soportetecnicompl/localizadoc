@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
     <style>
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.875rem; }
@@ -42,6 +43,15 @@
             <div class="glass-container p-4 text-center rounded-lg"><p id="metric-found" class="text-3xl font-bold text-yellow-400">0</p><p class="text-sm text-gray-400">Encontrados</p></div>
             <div class="glass-container p-4 text-center rounded-lg"><p id="metric-recovered" class="text-3xl font-bold text-green-400">0</p><p class="text-sm text-gray-400">Recuperados</p></div>
             <div class="glass-container p-4 text-center rounded-lg col-span-2 lg:col-span-1"><p id="metric-honesty-pending" class="text-3xl font-bold text-cyan-400">0</p><p class="text-sm text-gray-400">Muro Pendientes</p></div>
+            <div class="glass-container p-4 text-center rounded-lg col-span-2 lg:col-span-1">
+                <p id="metric-recovery-rate" class="text-3xl font-bold text-purple-400">0%</p>
+                <p class="text-sm text-gray-400">Recuperados</p>
+            </div>
+        </section>
+
+        <section class="glass-container p-6 mb-12">
+            <h2 class="text-2xl font-bold mb-4">Actividad — Últimos 30 días</h2>
+            <canvas id="activityChart" height="80"></canvas>
         </section>
 
         <section class="glass-container p-6 mb-12">
@@ -67,6 +77,18 @@
                     <button class="filter-btn" data-filter="week">Esta Semana</button>
                     <button class="filter-btn" data-filter="month">Este Mes</button>
                 </div>
+                <select id="countryFilter" class="px-3 py-2 rounded-lg bg-black/20 border border-gray-600 text-white">
+                    <option value="all">Todos los países</option>
+                    <option value="HN">🇭🇳 Honduras</option>
+                    <option value="SV">🇸🇻 El Salvador</option>
+                    <option value="GT">🇬🇹 Guatemala</option>
+                    <option value="NI">🇳🇮 Nicaragua</option>
+                    <option value="CR">🇨🇷 Costa Rica</option>
+                    <option value="Otro">🌎 Otro</option>
+                </select>
+                <button id="exportCsvBtn" class="btn-primary font-bold py-2 px-4 rounded-lg">
+                    <i class="fas fa-download mr-2"></i>Exportar CSV
+                </button>
             </div>
             <div class="overflow-x-auto">
                 <table>
