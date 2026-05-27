@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { showNotification, showConfirmation, toggleButtonLoading, populateCountries, populateDocTypes, closeModal, openModal } from './utils.js';
+import { showNotification, showConfirmation, toggleButtonLoading, populateCountries, populateDocTypes, closeModal, openModal, copyToClipboard } from './utils.js';
 import { checkDuplicate, insertLostReport, insertFoundReport, updateMatch, deleteReport, markAsRecovered as apiMarkAsRecovered, incrementFinderView, submitHonestyMessage, updateFoundReport } from './api.js';
 import { loadUserData } from './auth.js';
 import { renderMyReportsList } from './render.js';
@@ -157,7 +157,7 @@ export const handleClickActions = (e) => {
         case 'close-modal': closeModal(target.closest('.modal-backdrop')); break;
         case 'open-lost-modal': openLostModal(); break;
         case 'open-found-modal': openFoundModal(); break;
-        case 'copy': import('./utils.js').then(({ copyToClipboard }) => copyToClipboard(text, target)); break;
+        case 'copy': copyToClipboard(text, target); break;
         case 'delete-report':
             showConfirmation('¿Eliminar este reporte?', async () => {
                 const error = await deleteReport(id);

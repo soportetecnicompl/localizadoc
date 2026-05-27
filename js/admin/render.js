@@ -1,5 +1,3 @@
-import { deleteSponsor, deleteReport, approveHonesty, deleteHonesty, getSponsor, getReport } from './api.js';
-
 const fmt = (d) => d ? new Date(d).toLocaleString('es-HN', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }) : 'N/A';
 const statusColor = { lost:'bg-red-900 text-red-300', match:'bg-orange-900 text-orange-300', found:'bg-yellow-900 text-yellow-300', recovered:'bg-green-900 text-green-300' };
 
