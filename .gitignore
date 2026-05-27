@@ -1,3 +1,7 @@
 .vercel
 node_modules
 *.log
+.claude
+docs/superpowers
+js/firebase-config.js
+firestore.rules
