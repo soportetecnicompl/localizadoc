@@ -6,11 +6,12 @@ export const closeModal = (el) => {
     if (el) el.style.display = 'none';
 };
 export const copyToClipboard = (text, btn) => {
+    if (!navigator.clipboard) return;
     navigator.clipboard.writeText(text).then(() => {
         const orig = btn.textContent;
         btn.textContent = '¡Copiado!';
         setTimeout(() => { btn.textContent = orig; }, 2000);
-    });
+    }).catch(() => {});
 };
 export const showNotification = (title, messageHTML) => {
     const el = document.getElementById('notificationTitle');
@@ -24,7 +25,7 @@ export const showConfirmation = (message, onConfirm) => {
     const confirmOk = document.getElementById('confirmOk');
     const confirmCancel = document.getElementById('confirmCancel');
     if (!confirmMsg || !confirmOk || !confirmCancel) return;
-    confirmMsg.innerHTML = message;
+    confirmMsg.textContent = message;
     confirmOk.addEventListener('click', () => { onConfirm(); closeModal('confirmationModal'); }, { once: true });
     confirmCancel.addEventListener('click', () => closeModal('confirmationModal'), { once: true });
     openModal('confirmationModal');
