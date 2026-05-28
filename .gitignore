@@ -5,3 +5,4 @@ node_modules
 .superpowers
 js/firebase-config.js
 firestore.rules
+css/tailwind.css
